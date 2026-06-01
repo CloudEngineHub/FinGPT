@@ -15,14 +15,14 @@ class TestMiniMaxSentimentProvider:
     def test_init_with_api_key(self):
         from finogrid.fingpt_integration.sentiment.minimax_provider import MiniMaxSentimentProvider
         provider = MiniMaxSentimentProvider()
-        assert provider.model == "MiniMax-M2.7"
+        assert provider.model == "MiniMax-M3"
         assert provider.client is not None
 
     @patch.dict(os.environ, {"MINIMAX_API_KEY": "test-key"})
     def test_init_custom_model(self):
         from finogrid.fingpt_integration.sentiment.minimax_provider import MiniMaxSentimentProvider
-        provider = MiniMaxSentimentProvider(model="MiniMax-M2.7-highspeed")
-        assert provider.model == "MiniMax-M2.7-highspeed"
+        provider = MiniMaxSentimentProvider(model="MiniMax-M2.7")
+        assert provider.model == "MiniMax-M2.7"
 
     @patch.dict(os.environ, {}, clear=True)
     def test_init_missing_api_key(self):
@@ -179,7 +179,7 @@ class TestMiniMaxLLMClient:
     def test_init_defaults(self):
         from finogrid.fingpt_integration.minimax_llm_client import MiniMaxLLMClient
         client = MiniMaxLLMClient()
-        assert client.model == "MiniMax-M2.7"
+        assert client.model == "MiniMax-M3"
         assert client.temperature == 0.7
         assert client.max_tokens == 1024
 
@@ -187,11 +187,11 @@ class TestMiniMaxLLMClient:
     def test_init_custom_params(self):
         from finogrid.fingpt_integration.minimax_llm_client import MiniMaxLLMClient
         client = MiniMaxLLMClient(
-            model="MiniMax-M2.7-highspeed",
+            model="MiniMax-M2.7",
             temperature=0.5,
             max_tokens=2048,
         )
-        assert client.model == "MiniMax-M2.7-highspeed"
+        assert client.model == "MiniMax-M2.7"
         assert client.temperature == 0.5
         assert client.max_tokens == 2048
 
