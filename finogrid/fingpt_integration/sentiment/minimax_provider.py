@@ -1,7 +1,8 @@
 """
 MiniMax provider for FinGPT sentiment — cost-effective alternative to OpenAI.
 
-Uses MiniMax's OpenAI-compatible API with MiniMax-M2.7 (enhanced reasoning and coding).
+Uses MiniMax's OpenAI-compatible API with MiniMax-M3 (latest flagship with
+512K context, 128K max output, image input support).
 Same interface as OpenAISentimentFallback — drop-in replacement.
 
 MiniMax API docs: https://platform.minimaxi.com/
@@ -35,7 +36,7 @@ class MiniMaxSentimentProvider:
     with a custom base_url.
     """
 
-    def __init__(self, model: str = "MiniMax-M2.7"):
+    def __init__(self, model: str = "MiniMax-M3"):
         self.model = model
         api_key = os.getenv("MINIMAX_API_KEY")
         if not api_key:
