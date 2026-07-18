@@ -9,8 +9,8 @@
 
 ## Setup
 
-* Set up your .env file, can refer to /FinGPT_sentiment/.env.example
-* Visit FinGPT_RAG/requirements.txt for the environment setup
+* Set up your .env file, refer to the local .env.example in this directory
+* Visit ../requirements.txt for the environment setup
 
 ``` python
 
