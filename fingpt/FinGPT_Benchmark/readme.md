@@ -58,6 +58,10 @@ We use different datasets at different phases of our instruction tuning paradigm
 - Multi-task Instruction Tuning: `sentiment-train & finred & ner & headline`
 - Zero-shot Aimed Instruction Tuning: `finred-cls & ner-cls & headline-cls -> sentiment-cls (test)`
 
+In our benchmark experiments, we used the headline dataset for sentiment fine-tuning because it was the most practical option for time and token-budget reasons. The news content dataset was kept in the data preparation pipeline, but it was not used in the final benchmark runs.
+
+If you want to experiment further, you can extend the preprocessing step to combine headlines and news content, or use the content split as a separate training source.
+
 You may download the datasets according to your needs. We also provide processed datasets for ConvFinQA and FinEval, but they are not used in our final work.
 
 ### prepare data from scratch

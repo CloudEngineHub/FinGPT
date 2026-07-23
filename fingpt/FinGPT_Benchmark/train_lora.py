@@ -71,17 +71,32 @@ def main(args):
     
     # Load training and testing datasets
     dataset_list = load_dataset(args.dataset, args.from_remote)
-    dataset_train = datasets.concatenate_datasets([d['train'] for d in dataset_list]).shuffle(seed=42)
+    mode = args.input_mode
+
+    def prepare_example(example):
+        if mode == "headline":
+            example["input"] = example["headline"]
+        elif mode == "content":
+            example["input"] = example["content"]
+        elif mode == "both":
+            example["input"] = f"Headline: {example['headline']}\nContent: {example['content']}"
+        else:
+            raise ValueError(f"invalid input_mode: {mode}")
+        return example
     
+    dataset_train = datasets.concatenate_datasets([d['train'] for d in dataset_list]).shuffle(seed=42)
+
     if args.test_dataset:
         dataset_list = load_dataset(args.test_dataset, args.from_remote)
     dataset_test = datasets.concatenate_datasets([d['test'] for d in dataset_list])
+
+    dataset = datasets.DatasetDict({"train": dataset_train, "test": dataset_test})
+    dataset = dataset.map(prepare_example)
+    dataset = dataset.map(partial(tokenize, args, tokenizer))
     
-    dataset = datasets.DatasetDict({'train': dataset_train, 'test': dataset_test})
     # Display first sample from the training dataset
     print(dataset['train'][0])
     # Filter out samples that exceed the maximum token length and remove unused columns
-    dataset = dataset.map(partial(tokenize, args, tokenizer))
     print('original dataset length: ', len(dataset['train']))
     dataset = dataset.filter(lambda x: not x['exceed_max_length'])
     print('filtered dataset length: ', len(dataset['train']))
@@ -172,6 +187,7 @@ if __name__ == "__main__":
     parser.add_argument("--local_rank", default=0, type=int)
     parser.add_argument("--run_name", default='local-test', type=str)
     parser.add_argument("--dataset", required=True, type=str)
+    parser.add_argument("--input_mode", default="headline", type=str, choices=["headline", "content", "both"])
     parser.add_argument("--test_dataset", type=str)
     parser.add_argument("--base_model", required=True, type=str, choices=['chatglm2', 'llama2', 'llama2-13b', 'llama2-13b-nr', 'baichuan', 'falcon', 'internlm', 'qwen', 'mpt', 'bloom'])
     parser.add_argument("--max_length", default=512, type=int)
